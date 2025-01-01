@@ -11,56 +11,98 @@ import java.util.UUID;
 
 @Entity("identities")
 public class Identity implements Serializable, Principal {
+
     @Id
-    @Column("id")
+    @Column("_id")
     private String id;
+
     @Column("username")
     private String username;
-    @Column
+
+    @Column("email")
     private String email;
+
     @Column("password")
     private String password;
+
     @Column("creationDate")
-    private String  creationDate;
+    private String creationDate;
+
     @Column("role")
     private Long roles;
+
     @Column("scopes")
     private String scopes;
+
     @Column("isAccountActivated")
     private boolean isAccountActivated;
 
-    public String getId() {return id;}
+    // Getters and Setters
+    public String getId() {
+        return id;
+    }
 
-    public String getUsername() {return username;}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getEmail() {return email;}
+    public String getUsername() {
+        return username;
+    }
 
-    public String getPassword() {return password;}
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getCreationDate() {return creationDate;}
+    public String getEmail() {
+        return email;
+    }
 
-    public Long getRoles() {return roles;}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-    public String getScopes() {return scopes;}
-
-    public boolean getAccountActivated() {return isAccountActivated;}
-
-    public void setUsername(String username) {this.username = username;}
-
-    public void setEmail(String email) {this.email = email;}
+    public String getPassword() {
+        return password;
+    }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setCreationDate(String creationDate) {this.creationDate = creationDate;}
+    public String getCreationDate() {
+        return creationDate;
+    }
 
-    public void setRoles(Long roles) {this.roles = roles;}
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
+    }
 
-    public void setScopes(String scopes) {this.scopes = scopes;}
+    public Long getRoles() {
+        return roles;
+    }
 
-    public void setAccountActivated(boolean accountActivated) {this.isAccountActivated = accountActivated;}
+    public void setRoles(Long roles) {
+        this.roles = roles;
+    }
 
+    public String getScopes() {
+        return scopes;
+    }
+
+    public void setScopes(String scopes) {
+        this.scopes = scopes;
+    }
+
+    public boolean isAccountActivated() {
+        return isAccountActivated;
+    }
+
+    public void setAccountActivated(boolean accountActivated) {
+        this.isAccountActivated = accountActivated;
+    }
+
+    // Constructor
     public Identity() {
         this.id = UUID.randomUUID().toString();
         this.isAccountActivated = false;
@@ -78,13 +120,13 @@ public class Identity implements Serializable, Principal {
     @Override
     public String toString() {
         return "Identity{" +
-                "id='" + id + '\'' +
-                "username='" + username + '\'' +
-                "password='" + password + '\'' +
-                "creationDate=" + creationDate +
-                "roles=" + roles +
-                "scopes=" + scopes +
-                "accountActivated=" + isAccountActivated +
+                "_id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", creationDate=" + creationDate +
+                ", roles=" + roles +
+                ", scopes=" + scopes +
+                ", accountActivated=" + isAccountActivated +
                 '}';
     }
 
@@ -93,8 +135,8 @@ public class Identity implements Serializable, Principal {
         return username;
     }
 
+    // Password hashing utility method
     public void hashPassword(String password, Argon2Utils argonUtility) {
         this.password = argonUtility.hash(password.toCharArray());
     }
-
 }

@@ -66,6 +66,7 @@ public class IdentityRegistrationEndpoint {
                              @FormParam("password") String password) {
         try {
             identityServices.registerIdentity(username, password, email);
+
             // Stream the confirmation page
             StreamingOutput stream = createHtmlResponse("/confirm.html");
             return Response.ok(stream).build();

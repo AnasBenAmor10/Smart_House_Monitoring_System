@@ -114,7 +114,7 @@ public class OAuthAuthorizationEndpoint {
                     params.getFirst("response_type"),
                     cookie.getValue().split("#")[0],
                     username,
-                    "resource.read,resource.write",
+                    "resource.read resource.write",
                     params.getFirst("code_challenge"), params.getFirst("state")
             );
             return Response.seeOther(UriBuilder.fromUri(redirectURI).build()).build();
