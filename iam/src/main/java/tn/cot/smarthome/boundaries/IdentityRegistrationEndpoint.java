@@ -68,7 +68,7 @@ public class IdentityRegistrationEndpoint {
             identityServices.registerIdentity(username, password, email);
 
             // Stream the confirmation page
-            StreamingOutput stream = createHtmlResponse("/confirm.html");
+            StreamingOutput stream = createHtmlResponse("/Activate.html");
             return Response.ok(stream).build();
 
         } catch (Exception e) {
