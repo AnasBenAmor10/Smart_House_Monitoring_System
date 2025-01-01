@@ -17,6 +17,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import jakarta.ws.rs.core.UriInfo;
+import tn.cot.smarthome.security.AuthorizationCode;
+
 @Path("/")
 public class OAuthAuthorizationEndpoint {
     public static final String CHALLENGE_RESPONSE_COOKIE_ID = "signInId";
@@ -124,6 +126,7 @@ public class OAuthAuthorizationEndpoint {
             return Response.seeOther(location).build();
         }
     }
+
     private String buildActualRedirectURI(String redirectUri,String responseType,String clientId,String userId,String approvedScopes,String codeChallenge,String state) throws Exception {
         StringBuilder sb = new StringBuilder(redirectUri);
         if ("code".equals(responseType)) {
@@ -163,12 +166,4 @@ public class OAuthAuthorizationEndpoint {
                 .type(MediaType.TEXT_HTML)
                 .build();
     }
-
-    @GET
-    @Path("/test")
-    public String testEndpoint() {
-        return "IAM Service is running!";
-    }
-
-
 }

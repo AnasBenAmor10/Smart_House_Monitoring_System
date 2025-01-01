@@ -111,10 +111,19 @@
         <version>4.11.1</version>
     </dependency>
     <dependency>
-        <groupId>org.eclipse.microprofile.config</groupId>
-        <artifactId>microprofile-config-api</artifactId>
-        <version>3.1</version>
-        <scope>compile</scope>
+        <groupId>jakarta.mail</groupId>
+        <artifactId>jakarta.mail-api</artifactId>
+        <version>2.1.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.eclipse.angus</groupId>
+        <artifactId>jakarta.mail</artifactId>
+        <version>1.0.0</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.7.36</version>
     </dependency>
 
 </dependencies>
@@ -128,7 +137,10 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
             <version>${version.compiler.plugin}</version>
-            <configuration></configuration>
+            <configuration>
+                <source>16</source>
+                <target>16</target>
+            </configuration>
         </plugin>
 
         <!--Build configuration for the WAR plugin: -->

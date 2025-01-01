@@ -10,53 +10,23 @@
     <style>
         body {
             background: url("back.png") no-repeat center fixed;
+            background-size: cover;
             min-height: 100vh;
         }
-
-        .header {
-            padding: 1rem 2rem;
-            background: transparent;
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .app-logo {
-            font-size: 24px;
-            color: #333;
-        }
-
-        .home-button {
-            color: #333;
-            border: 1px solid black;
-            border-radius: 4px;
-            text-decoration: none;
-            padding: 0.5rem 2rem;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-        }
-
-        .home-button:hover {
-            background-color: rgba(0,0,0,0.1);
-        }
-
         .signup-container {
             width: 100%;
             max-width: 650px;
             background: white;
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
-
         .form-control {
             background-color: #f8f9fa;
             border: none;
             padding: 0.8rem 1rem;
             border-radius: 10px;
         }
-
         .btn-signup {
             background-color: #00d15b;
             border: none;
@@ -64,118 +34,128 @@
             border-radius: 10px;
             width: 100%;
             color: white;
-            font-weight: 500;
+            font-weight: bold;
         }
-
-        .login-link {
-            color: #333;
-            text-decoration: none;
-            font-weight: 500;
+        .btn-signup:hover {
+            background-color: #00b64a;
         }
-
-        .input-group-text {
-            background-color: transparent;
-            border: none;
-            cursor: pointer;
+        .error-message {
+            color: red;
+            font-size: 0.875rem;
         }
-
-        .form-control:focus {
-            box-shadow: none;
-            border-color: #00d15b;
-        }
-
-        .main-content {
-            min-height: 100vh;
-            padding-top: 80px;
-        }
-
         .eye-icon {
             color: #666;
+            cursor: pointer;
         }
-
         .eye-icon:hover {
             color: #333;
         }
     </style>
 </head>
 <body>
-<!-- Header with Logo and Home button -->
-<header class="header">
-    <div class="d-flex justify-content-center align-items-center">
-        <img src="logo.png" width="300px">
-    </div>
-</header>
-
-<!-- Main Content -->
-<div class="main-content d-flex align-items-center justify-content-center">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-12">
-                <div class="signup-container mx-auto">
-                    <h2 class="text-center mb-2">Sign Up</h2>
-                    <p class="text-center text-muted mb-4">Create your account to monitor your Home</p>
-
-                    <form>
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="text" id="username" class="form-control" placeholder="Username">
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <div class="input-group">
-                                <input type="email" id="email" class="form-control" placeholder="Email">
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <div class="input-group">
-                                <input type="password" id="password" class="form-control" placeholder="Password">
-                                <span class="input-group-text" id="togglePassword">
-                                        <i class="bi bi-eye-slash-fill eye-icon"></i>
-                                    </span>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-signup mb-3">Sign Up</button>
-
-                        <div class="text-center mt-4">
-                            <a href="#" class="login-link">Already have an account? Log in ></a>
-                        </div>
-                    </form>
-                </div>
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="signup-container">
+        <h2 class="text-center mb-3">Sign Up</h2>
+        <p class="text-center text-muted mb-4">Create your account to monitor your Home</p>
+        <form id="registerForm" action="/rest-iam/register" method="POST">
+            <div class="mb-3">
+                <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+                <small class="error-message d-none" id="usernameError">Username is required</small>
             </div>
+            <div class="mb-3">
+                <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+                <small class="error-message d-none" id="emailError">Valid email is required</small>
+            </div>
+            <div class="mb-4">
+                <div class="input-group">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    <span class="input-group-text" id="togglePassword">
+                        <i class="bi bi-eye-slash-fill eye-icon"></i>
+                    </span>
+                </div>
+                <small class="error-message d-none" id="passwordError">Password is required</small>
+            </div>
+            <button type="submit" class="btn btn-signup">Sign Up</button>
+        </form>
+        <div class="text-center mt-3">
+            <a href="#" class="text-decoration-none">Already have an account? Log in ></a>
         </div>
     </div>
 </div>
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-<!-- Password visibility toggle -->
 <script>
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#password');
-    const eyeIcon = togglePassword.querySelector('i');
-
-    togglePassword.addEventListener('click', function (e) {
-        // Toggle the type attribute
-        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', type);
-
-        // Toggle the icon
-        if (type === 'password') {
-            eyeIcon.classList.remove('bi-eye-fill');
-            eyeIcon.classList.add('bi-eye-slash-fill');
-        } else {
-            eyeIcon.classList.remove('bi-eye-slash-fill');
-            eyeIcon.classList.add('bi-eye-fill');
-        }
+    // Password visibility toggle
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordField = document.getElementById('password');
+        const icon = this.querySelector('i');
+        const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordField.setAttribute('type', type);
+        icon.classList.toggle('bi-eye-slash-fill');
+        icon.classList.toggle('bi-eye-fill');
     });
 
-    // Prevent the password input from being submitted when clicking the toggle
-    togglePassword.addEventListener('mousedown', function(e) {
+    // Form validation and submission
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
         e.preventDefault();
+
+        // Simple client-side validation
+        const username = document.getElementById('username').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        let isValid = true;
+
+        if (!username) {
+            document.getElementById('usernameError').classList.remove('d-none');
+            isValid = false;
+        } else {
+            document.getElementById('usernameError').classList.add('d-none');
+        }
+
+        if (!email || !/\S+@\S+\.\S+/.test(email)) {
+            document.getElementById('emailError').classList.remove('d-none');
+            isValid = false;
+        } else {
+            document.getElementById('emailError').classList.add('d-none');
+        }
+
+        if (!password) {
+            document.getElementById('passwordError').classList.remove('d-none');
+            isValid = false;
+        } else {
+            document.getElementById('passwordError').classList.add('d-none');
+        }
+
+        if (!isValid) return;
+
+        // Prepare data for submission
+        const formData = new URLSearchParams({
+            username,
+            email,
+            password,
+        });
+
+        try {
+            const response = await fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: formData,
+            });
+
+            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
+
+            const result = await response.text();
+            document.open();
+            document.write(result);
+            document.close();
+        } catch (error) {
+            console.error('Error during registration:', error);
+            alert('Registration failed. Please try again.');
+        }
     });
 </script>
 </body>

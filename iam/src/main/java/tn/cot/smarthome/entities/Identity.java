@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.UUID;
 
-
 @Entity("identities")
 public class Identity implements Serializable, Principal {
     @Id
