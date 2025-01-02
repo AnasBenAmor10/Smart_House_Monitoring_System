@@ -1,137 +1,105 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SmartHydro - Confirmation Code</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart House Monitoring - Login</title>
+    <!-- Bootstrap CSS and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: linear-gradient(120deg,
+            #c4c5ea 0%,
+            #e4ebf1 100%
+            );
+            background-size: cover;
             min-height: 100vh;
-            margin: 0;
         }
 
-        .auth-layout {
-            background: #eff2f6;
-            padding: 3rem 2rem;
-            border-radius: 12px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        .header {
+            padding: 1rem 2rem;
+            background: transparent;
+            position: fixed;
+            top: 0;
             width: 100%;
-            max-width: 420px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            z-index: 1000;
         }
 
-        .auth-layout:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
-        }
-
-        .auth-layout h1 {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
+        .home-button {
             color: #333;
-            text-align: center;
+            border: 1px solid black;
+            border-radius: 4px;
+            text-decoration: none;
+            padding: 0.5rem 2rem;
+            transition: background-color 0.3s;
         }
 
-        .auth-layout p {
-            margin-bottom: 1.5rem;
-            color: #777;
-            font-size: 1rem;
-            text-align: center;
+        .home-button:hover {
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-            position: relative;
-        }
-
-        .form-group input {
+        .login-container {
             width: 100%;
-            padding: 12px 40px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s ease;
+            max-width: 650px;
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
-        .form-group input:focus {
-            border-color: #a6ffe0;
-            box-shadow: 0 0 5px rgba(99, 102, 241, 0.3);
-        }
-
-        .form-group p {
-            position: absolute;
-            top: 48%;
-            left: 10px;
-            transform: translateY(-50%);
-            font-size: 1.3rem;
-            color: #aaa;
-        }
-
-        .form-group .toggle-password {
-            position: absolute;
-            top: 50%;
-            right: -130px;
-            transform: translateY(-50%);
-            background: none;
+        .form-control {
+            background-color: #f8f9fa;
             border: none;
-            cursor: pointer;
-            color: #aaa;
-            font-size: 1.4rem;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
         }
 
-        .form-group .toggle-password:hover {
-            color: #24c790;
-        }
-
-        .error-message {
-            margin-top: 4px;
-            font-size: 0.85rem;
-            color: red;
-        }
-
-        button {
+        .btn-login {
+            background-color: #00d15b;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 10px;
             width: 100%;
-            padding: 12px;
-            background: linear-gradient(to right, rgb(0, 62, 28), #18534f);
             color: white;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
+            font-weight: 500;
         }
 
-        button:hover {
-            background: linear-gradient(to right, #003e1c, #003e1c);
-            transform: translateY(-3px);
-        }
-
-        .auth-footer {
-            text-align: center;
-            margin-top: 1.5rem;
+        .forgot-password {
+            color: #666;
+            text-decoration: none;
             font-size: 0.9rem;
         }
 
-        .auth-footer a {
-            color: #000000;
+        .create-account {
+            color: #333;
             text-decoration: none;
+            font-weight: 500;
         }
 
-        .auth-footer a:hover {
-            text-decoration: underline;
+        .input-group-text {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
         }
 
+        .form-control:focus {
+            box-shadow: none;
+            border-color: #00d15b;
+        }
+
+        .main-content {
+            min-height: 100vh;
+            padding-top: 80px;
+        }
+
+        .eye-icon {
+            color: #666;
+        }
+
+        .eye-icon:hover {
+            color: #333;
+        }
     </style>
     <script>
         function parseQueryString(string) {
@@ -172,20 +140,31 @@
     </script>
 </head>
 <body>
-<div class="auth-layout">
-    <h1>Activate Account</h1>
-    <p>Confirmation code is sent to your Email</p>
-    <form method="post" action="/rest-iam/register/activate" class="signin-form needs-validation" id="confirmForm" novalidate>
-        <div class="form-group">
-            <label class="label" for="code">Activation Code</label>
-            <input name="code" id="code" type="text" placeholder="Activation Code" required="true"/>
+
+<!-- Main Content -->
+<div class="main-content d-flex align-items-center justify-content-center">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="login-container mx-auto">
+                    <h2 class="text-center mb-2">Activate Account</h2>
+                    <p class="text-center text-muted mb-4">Confirmation code is sent to your Email</p>
+                    <form method="post" action="/rest-iam/register/activate" class="signin-form needs-validation" id="confirmForm" novalidate>
+                        <div class="mb-3">
+                            <div class="input-group">
+                                <input name="code" class="form-control" id="code" type="text" placeholder="Activation Code" required="true"/>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-login mb-3">Activate</button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <input type="hidden" id="codeId" name="codeId"/>
-            <button id="modeButton" type="submit">Activate</button>
-        </div>
-    </form>
+    </div>
 </div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     let confirmForm = document.getElementById('confirmForm');
