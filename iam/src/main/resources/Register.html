@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
         body {
-            background: url("back.png") no-repeat center fixed;
             background-size: cover;
             min-height: 100vh;
         }
@@ -51,6 +50,110 @@
             color: #333;
         }
     </style>
+    <script>
+        function parseQueryString(string) {
+            if(string == "") { return {}; }
+            var segments = string.split("&").map(s => s.split("=") );
+            var queryString = {};
+            segments.forEach(s => queryString[s[0]] = s[1]);
+            return queryString;
+        }
+        function base64ArrayBuffer(arrayBuffer) {
+            let base64    = '';
+            const encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+
+            let bytes         = new Uint8Array(arrayBuffer);
+            let byteLength    = bytes.byteLength;
+            let byteRemainder = byteLength % 3;
+            let mainLength    = byteLength - byteRemainder;
+
+            let a, b, c, d;
+            let chunk;
+
+            // Main loop deals with bytes in chunks of 3
+            for (let i = 0; i < mainLength; i = i + 3) {
+                // Combine the three bytes into a single integer
+                chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2];
+
+                // Use bitmasks to extract 6-bit segments from the triplet
+                a = (chunk & 16515072) >> 18; // 16515072 = (2^6 - 1) << 18
+                b = (chunk & 258048)   >> 12; // 258048   = (2^6 - 1) << 12
+                c = (chunk & 4032)     >>  6; // 4032     = (2^6 - 1) << 6
+                d = chunk & 63;               // 63       = 2^6 - 1
+
+                // Convert the raw binary segments to the appropriate ASCII encoding
+                base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d];
+            }
+
+            // Deal with the remaining bytes and padding
+            if (byteRemainder === 1) {
+                chunk = bytes[mainLength];
+
+                a = (chunk & 252) >> 2; // 252 = (2^6 - 1) << 2
+
+                // Set the 4 least significant bits to zero
+                b = (chunk & 3)   << 4; // 3   = 2^2 - 1
+
+                base64 += encodings[a] + encodings[b] + '==';
+            } else if (byteRemainder === 2) {
+                chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1];
+
+                a = (chunk & 64512) >> 10; // 64512 = (2^6 - 1) << 10
+                b = (chunk & 1008)  >>  4; // 1008  = (2^6 - 1) << 4
+
+                // Set the 2 least significant bits to zero
+                c = (chunk & 15)    <<  2; // 15    = 2^4 - 1
+
+                base64 += encodings[a] + encodings[b] + encodings[c] + '=';
+            }
+
+            return base64;
+        }
+
+
+        /**
+         * Use SHA-384: 384 bits = 48 bytes = 64 chars in Base64
+         * @param username The username associated with the password
+         * @param password The password for which we need to increase entropy
+         * @returns {Promise<ArrayBuffer>}
+         */
+        async function signUp(e) {
+            e.preventDefault();
+            let registerForm = document.getElementById('registerForm');
+            let payload = new FormData(registerForm);
+            let myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+            let options = {
+                method: 'POST',
+                headers: myHeaders,
+                mode: 'cors',
+                cache: 'no-cache',
+                credentials: 'same-origin',
+                redirect: 'follow',
+                body: new URLSearchParams(payload),
+            };
+            fetch(`${registerForm.action}`, options)
+                .then((response) => {
+                    if (response.ok) {
+                        return response.text(); // Read the response as text
+                    } else {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                })
+                .then((htmlContent) => {
+                    // Replace the whole body with the new HTML
+                    document.open();
+                    document.write(htmlContent);
+                    document.close();
+                })
+                .catch((err) => {
+                    console.info(err + " url: " + `${registerForm.action}`);
+                });
+
+
+        }
+
+    </script>
 </head>
 <body>
 <div class="d-flex align-items-center justify-content-center min-vh-100">
@@ -96,9 +199,13 @@
         icon.classList.toggle('bi-eye-fill');
     });
 
-    // Form validation and submission
+    // Form submission with validation
+    let isSubmitting = false; // Prevent multiple submissions
     document.getElementById('registerForm').addEventListener('submit', async function (e) {
         e.preventDefault();
+
+        if (isSubmitting) return; // Prevent duplicate submissions
+        isSubmitting = true;
 
         // Simple client-side validation
         const username = document.getElementById('username').value.trim();
@@ -128,35 +235,17 @@
             document.getElementById('passwordError').classList.add('d-none');
         }
 
-        if (!isValid) return;
-
-        // Prepare data for submission
-        const formData = new URLSearchParams({
-            username,
-            email,
-            password,
-        });
-
-        try {
-            const response = await fetch(this.action, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: formData,
-            });
-
-            if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
-
-            const result = await response.text();
-            document.open();
-            document.write(result);
-            document.close();
-        } catch (error) {
-            console.error('Error during registration:', error);
-            alert('Registration failed. Please try again.');
+        if (!isValid) {
+            isSubmitting = false;
+            return;
         }
     });
+</script>
+<script>
+    let q = parseQueryString(window.location.search.substring(1));
+    let registerForm = document.getElementById('registerForm');
+    let base = registerForm.getAttribute("action");
+    registerForm.addEventListener('submit',signUp);
 </script>
 </body>
 </html>

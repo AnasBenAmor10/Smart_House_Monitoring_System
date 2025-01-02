@@ -19,6 +19,8 @@ import java.util.Objects;
 import jakarta.ws.rs.core.UriInfo;
 import tn.cot.smarthome.security.AuthorizationCode;
 
+import static com.mongodb.internal.authentication.AwsCredentialHelper.LOGGER;
+
 @Path("/")
 public class OAuthAuthorizationEndpoint {
     public static final String CHALLENGE_RESPONSE_COOKIE_ID = "signInId";
@@ -97,33 +99,64 @@ public class OAuthAuthorizationEndpoint {
                 .cookie(new NewCookie.Builder(CHALLENGE_RESPONSE_COOKIE_ID)
                         .httpOnly(true).secure(true).sameSite(NewCookie.SameSite.STRICT).value(tenant.getName()+"#"+requestedScope+"$"+redirectUri).build()).build();
     }
+
     @POST
     @Path("/login/authorization")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_HTML)
     public Response login(@CookieParam(CHALLENGE_RESPONSE_COOKIE_ID) Cookie cookie,
-                          @FormParam("username")String username,
-                          @FormParam("password")String password,
+                          @FormParam("username") String username,
+                          @FormParam("password") String password,
                           @Context UriInfo uriInfo) throws Exception {
 
-        Identity  identity = identityRepository.findByUsername(username).get();
-        if (argon2Utils.check(identity.getPassword(), password.toCharArray())) {
-            MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
-            String redirectURI = buildActualRedirectURI(
-                    cookie.getValue().split("\\$")[1],
-                    params.getFirst("response_type"),
-                    cookie.getValue().split("#")[0],
-                    username,
-                    "resource.read resource.write",
-                    params.getFirst("code_challenge"), params.getFirst("state")
-            );
-            return Response.seeOther(UriBuilder.fromUri(redirectURI).build()).build();
-        } else {
-            var location = UriBuilder.fromUri(cookie.getValue().split("\\$")[1])
-                    .queryParam("error", "User doesn't approved the request.")
-                    .queryParam("error_description", "User doesn't approved the request.")
+        try {
+            if (cookie == null) {
+                LOGGER.error("Cookie is missing.");
+                throw new Exception("Authorization cookie is missing.");
+            }
+
+            Identity identity = identityRepository.findByUsername(username)
+                    .orElseThrow(() -> {
+                        LOGGER.error("Identity not found for username: " + username);
+                        return new Exception("Identity not found.");
+                    });
+
+            // Check if the account is activated
+            if (!identity.isAccountActivated()) {
+                var location = UriBuilder.fromUri(cookie.getValue().split("\\$")[1])
+                        .queryParam("error", "Account not activated.")
+                        .queryParam("error_description", "Please verify your account before logging in.")
+                        .build();
+                return Response.status(Response.Status.FORBIDDEN)
+                        .entity("Account not activated. Please verify your account before logging in.")
+                        .location(location)
+                        .build();
+            }
+
+            if (argon2Utils.check(identity.getPassword(), password.toCharArray())) {
+                MultivaluedMap<String, String> params = uriInfo.getQueryParameters();
+                String redirectURI = buildActualRedirectURI(
+                        cookie.getValue().split("\\$")[1],
+                        params.getFirst("response_type"),
+                        cookie.getValue().split("#")[0],
+                        username,
+                        "resource.read,resource.write",
+                        params.getFirst("code_challenge"), params.getFirst("state")
+                );
+                return Response.seeOther(UriBuilder.fromUri(redirectURI).build()).build();
+            } else {
+
+                var location = UriBuilder.fromUri(cookie.getValue().split("\\$")[1])
+                        .queryParam("error", "User doesn't approved the request.")
+                        .queryParam("error_description", "User doesn't approved the request.")
+                        .build();
+                return Response.seeOther(location).build();
+            }
+        } catch (Exception e) {
+            LOGGER.error("Error during login: ", e);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("An error occurred during login. Please try again later.")
                     .build();
-            return Response.seeOther(location).build();
         }
     }
 
@@ -142,8 +175,6 @@ public class OAuthAuthorizationEndpoint {
         }
         return sb.toString();
     }
-
-
     private Response informUserAboutError(String error) {
         String errorMessage = String.format(
                 "<!DOCTYPE html>" +

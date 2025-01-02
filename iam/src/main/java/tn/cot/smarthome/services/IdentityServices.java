@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.mongodb.internal.authentication.AwsCredentialHelper.LOGGER;
+
 
 @ApplicationScoped
 public class IdentityServices {
@@ -46,6 +48,7 @@ public class IdentityServices {
 
     public void registerIdentity(String username, String password, String email) {
         validateIdentity(username, email);
+        LOGGER.info("Password registration side: " + password);
         Identity identity = createNewIdentity(username, password, email);
         identityRepository.save(identity);
         String activationCode = generateActivationCode();
@@ -62,6 +65,7 @@ public class IdentityServices {
             throw new EJBException("Invalid activation code.");
         }
         String email = codeDetails.getLeft();
+        LOGGER.info("Activated Identity: " + email);
         LocalDateTime expirationTime = codeDetails.getRight();
         if (LocalDateTime.now().isAfter(expirationTime)) {
             activationCodes.remove(code);
