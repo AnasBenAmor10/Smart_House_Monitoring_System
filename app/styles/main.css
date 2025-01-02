@@ -6,16 +6,6 @@ body {
     padding: 0;
     height: 100vh;
   }
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
-    width: 100%;
-    box-sizing: border-box;
-}
-
 .logo {
     display: block;
 }
@@ -40,21 +30,28 @@ body {
     background-color: #333;
 }
 
+/* Right content alignment */
+.right-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
 
-  .hero-section {
+
+.hero-section {
     text-align: center;
     padding: 200px 20px 80px;
     color: white;
   }
 
-  .hero-section h1 {
+.hero-section h1 {
     font-size: 3.5rem;
     font-weight: bold;
     color: black;
     margin-bottom: 20px;
   }
 
-  .hero-section h2 {
+.hero-section h2 {
     font-weight: bold;
     color: black;
     margin-bottom: 20px;

@@ -109,29 +109,7 @@ export class HomePresenter extends Presenter {
       }
     });
 
-    // Check for the token on initialization
-    this.checkToken();
-
     // Load weather data
     this.model.loadModel();
-  }
-
-  // Check for the token and hide the dashboard if it's not present
-  checkToken() {
-    const token = sessionStorage.getItem("accessToken"); // Replace with the actual key for your token
-    if (!token) {
-      this.view.hideLoggedOutUI();
-    }
-  }
-
-  // Method to handle logout and token removal
-  handleLogout() {
-    sessionStorage.removeItem("accessToken"); // Replace with the actual token key
-    this.view.hideLoggedOutUI();
-  }
-
-  // Add method to bind logout button
-  bindLogoutButton() {
-    this.view.bindLogoutButton(this);
   }
 }

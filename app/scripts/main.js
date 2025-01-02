@@ -1,6 +1,5 @@
 import * as bootstrap from 'bootstrap'
 import {checkSession, registerPKCEClickListener, registration, handlePKCERedirect} from './iam.js';
-import {PWALocalizer} from './util.js'
 import "./routes.js"
 
 (() => {
@@ -9,14 +8,15 @@ import "./routes.js"
     // Function to handle logout button visibility and functionality
     const setupLogoutButton = () => {
         const logoutButton = document.getElementById("signout");
+        const profile=document.getElementById("profile")
         if (logoutButton) {
             if (checkSession()) {
-                logoutButton.classList.remove("d-none");
+                profile.classList.remove("d-none");
                 
                 // Add event listener for the logout button
                 logoutButton.addEventListener('click', function() {
                     sessionStorage.removeItem('accessToken'); // Remove token from sessionStorage
-                    logoutButton.classList.add("d-none"); // Hide the button
+                    profile.classList.add("d-none"); // Hide the button
                     console.log("Logged out and token removed.");
                     
                     // Clear main content and show welcome page

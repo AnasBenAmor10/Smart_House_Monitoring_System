@@ -25,14 +25,85 @@
 </head>
 
 <body>
-  <header class="header">
-    <div class="logo">
-        <a href="#">
-            <img src="images/logo.png" alt="Smart House Logo">
-        </a>
-    </div>
-    <button id="signout" class="d-none logout-btn">Logout</button>
- </header>
+<header class="header">
+  <nav class="navbar navbar-expand-lg w-100">
+      <div class="container-fluid">
+          <!-- Logo Section -->
+          <div class="navbar-brand logo">
+              <a href="#">
+                  <img src="images/logo.png" alt="Smart House Logo">
+              </a>
+          </div>
+
+          <!-- Right Section (Profile + Logout) -->
+          <div class="d-none right-content" id="profile">
+              <!-- Profile Section -->
+              <div class="profile-section">
+                  <!-- Notification Bell with Dropdown -->
+                  <div class="dropdown">
+                      <div class="notification-badge" data-bs-toggle="dropdown">
+                          <i class="fas fa-bell fs-5 text-muted"></i>
+                          <div class="notification-dot"></div>
+                      </div>
+                      <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                        <div class="notification-header">
+                          Notifications
+                      </div>
+                      <div class="notification-item">
+                          <div class="notification-icon">
+                              <i class="fas fa-temperature-high"></i>
+                          </div>
+                          <div class="notification-content">
+                              <div class="notification-title">Temperature Alert</div>
+                              <div class="notification-text">Living room temperature is above threshold</div>
+                              <div class="notification-time">2 minutes ago</div>
+                          </div>
+                      </div>
+                      <div class="notification-item">
+                          <div class="notification-icon">
+                              <i class="fas fa-door-closed"></i>
+                          </div>
+                          <div class="notification-content">
+                              <div class="notification-title">Door Security</div>
+                              <div class="notification-text">Front door was left open</div>
+                              <div class="notification-time">15 minutes ago</div>
+                          </div>
+                      </div>
+                      <div class="notification-item">
+                          <div class="notification-icon">
+                              <i class="fas fa-lightbulb"></i>
+                          </div>
+                          <div class="notification-content">
+                              <div class="notification-title">Energy Alert</div>
+                              <div class="notification-text">Lights left on in the kitchen</div>
+                              <div class="notification-time">1 hour ago</div>
+                          </div>
+                      </div>
+                      <a href="#" class="view-all">View All Notifications</a>
+                      </div>
+                  </div>
+
+                  <!-- Profile Dropdown -->
+                  <div class="dropdown">
+                      <a class="dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown" style="text-decoration: none; color: inherit;">
+                          <div class="profile-img">
+                              <i class="fas fa-user"></i>
+                          </div>
+                          <span class="ms-2 me-1 text-dark">Anas</span>
+                      </a>
+                      <ul class="dropdown-menu dropdown-menu-end">
+                          <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profile</a></li>
+                          <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                      </ul>
+                  </div>
+              </div>
+
+              <!-- Logout Button -->
+              <button id="signout" class="logout-btn ms-3">Logout</button>
+          </div>
+      </div>
+  </nav>
+</header>
   
   <main id="mainElem"></main>
   <template id="welcome-content">
