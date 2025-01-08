@@ -122,4 +122,42 @@ public class IdentityServices {
 
         return codeBuilder.toString();
     }
+
+
+    // Get Identity by ID
+    public Identity getIdentityById(Long id) {
+        return identityRepository.findById(id.toString())
+                .orElseThrow(() -> new EJBException("Identity not found with ID: " + id));
+    }
+
+    public Identity updateIdentity(Long id, String username, String email, String newPassword, String currentPassword) {
+        // Step 1: Get the current identity by ID
+        Identity identity = identityRepository.findById(id.toString())
+                .orElseThrow(() -> new EJBException("Identity not found with ID: " + id));
+
+        // Step 2: Verify if the provided current password matches the stored password
+        if (!argon2Utils.check(identity.getPassword(), currentPassword.toCharArray())) {
+            throw new EJBException("Current password is incorrect.");
+        }
+        // Step 3: Update the identity details
+        identity.setUsername(username);
+        identity.setEmail(email);
+
+        // Step 4: If new password is provided, hash and update it
+        if (newPassword != null && !newPassword.isEmpty()) {
+            identity.hashPassword(newPassword, argon2Utils);
+        }
+
+        // Step 5: Save the updated identity
+        identityRepository.save(identity);
+
+        return identity;
+    }
+    // Delete Identity by ID
+    public void deleteIdentityById(Long id) {
+        Identity identity = identityRepository.findById(id.toString())
+                .orElseThrow(() -> new EJBException("Identity not found with ID: " + id));
+        identityRepository.delete(identity);
+    }
+
 }
