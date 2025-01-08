@@ -43,11 +43,13 @@ public class IdentityServices {
 
     private static final int ACTIVATION_CODE_LENGTH = 6;
     private static final int ACTIVATION_CODE_EXPIRATION_MINUTES = 5;
+    private static final int MIN_PASSWORD_LENGTH = 8;
 
     private final Map<String, Pair<String, LocalDateTime>> activationCodes = new HashMap<>();
 
     public void registerIdentity(String username, String password, String email) {
         validateIdentity(username, email);
+        validatePassword(password);
         LOGGER.info("Password registration side: " + password);
         Identity identity = createNewIdentity(username, password, email);
         identityRepository.save(identity);
@@ -158,6 +160,20 @@ public class IdentityServices {
         Identity identity = identityRepository.findById(id.toString())
                 .orElseThrow(() -> new EJBException("Identity not found with ID: " + id));
         identityRepository.delete(identity);
+    }
+    private void validatePassword(String password) {
+        if (password == null || password.isEmpty()) {
+            throw new EJBException("Password is required.");
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            throw new EJBException("Password must be at least " + MIN_PASSWORD_LENGTH + " characters long.");
+        }
+        if (!password.matches(".*\\d.*")) { // At least one digit
+            throw new EJBException("Password must contain at least one number.");
+        }
+        if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) { // At least one special character
+            throw new EJBException("Password must contain at least one special character.");
+        }
     }
 
 }

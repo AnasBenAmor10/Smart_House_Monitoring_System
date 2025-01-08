@@ -1,17 +1,23 @@
 package tn.cot.smarthome.boundaries;
 
+import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.inject.Inject;
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
 import tn.cot.smarthome.entities.Identity;
 import tn.cot.smarthome.services.IdentityServices;
+import tn.cot.smarthome.security.JwtManager;
 
 @Path("/identities")
 public class IdentityManagementEndpoint {
 
     @Inject
     IdentityServices identityService;
+    @EJB
+    private JwtManager jwtManager;
 
     // Update Identity
     @PUT
@@ -60,4 +66,30 @@ public class IdentityManagementEndpoint {
                     .build();
         }
     }
+    @GET
+    @Path("/profile")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserProfile(@HeaderParam("Authorization") String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Authorization header missing or invalid").build();
+        }
+
+        String token = authorizationHeader.substring("Bearer ".length());
+
+        try {
+            var claims = jwtManager.verifyToken(token);
+            String username = claims.get("sub");
+
+            // Fetch user profile or other logic
+            JsonObject profile = Json.createObjectBuilder()
+                    .add("username", username)
+                    .add("roles", claims.get("groups").toString())
+                    .build();
+
+            return Response.ok(profile).build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.UNAUTHORIZED).entity("Invalid or expired token").build();
+        }
+    }
+
 }

@@ -79,7 +79,6 @@ export function registerPKCEClickListener() {
 export function registration() {
     // Ensure the 'signup' button exists before adding the event listener
     const signupButton = document.getElementById("signup");
-	console.log(signupButton);
     if (signupButton) {
         // Initiate the registration flow when the link is clicked
         signupButton.addEventListener("click", async function (e) {
@@ -189,6 +188,42 @@ export function handlePKCERedirect(){
         localStorage.removeItem("pkce_code_verifier");
     }
 }
+export function handleProfilName() {
+    let token = sessionStorage.getItem('accessToken');
+
+    // Vérifier si le token est présent
+    if (token) {
+        // Envoi de la requête GET au backend pour récupérer le profil de l'utilisateur
+        fetch('https://iam.smarthomecot.lme:8443/rest-iam/identities/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,  // En-tête avec le token Bearer
+                'Content-Type': 'application/json'   // Définir le type de contenu comme JSON
+            }
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();  // Attendre la résolution de la promesse JSON
+            } else {
+                throw new Error('Échec de la récupération du profil utilisateur');
+            }
+        })
+        .then(data => {
+            // Extraire le nom d'utilisateur depuis la réponse
+            const username = data.username;
+            
+            // Mettre à jour le div avec le nom de l'utilisateur
+            document.getElementById('name').innerText = `Hi ${username}!`;
+            document.getElementById('user-name').innerText = `${username}`;
+            document.getElementById('profile-name').innerText= `${username}`;
+        })
+        .catch(error => {
+            console.error('Erreur:', error);  // Gérer les erreurs (par exemple, token invalide ou erreur serveur)
+        });
+    } else {
+        console.log('Token non trouvé. L\'utilisateur n\'est peut-être pas authentifié.');
+    }
+}
 
 
 //////////////////////////////////////////////////////////////////////
@@ -224,3 +259,4 @@ async function pkceChallengeFromVerifier(v) {
     let hashed = await sha256(v);
     return base64urlencode(hashed);
 }
+

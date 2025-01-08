@@ -15,7 +15,7 @@ export class Broker{
 	}
 	
 	subscribe(topic,callback){
-		if(topic && !this.topics[topic]){
+		if(topic && ! this.topics[topic]){
 			this.topics[topic]=[]; // Initialisation à un tableau vide
 		}
 		this.topics[topic].push(callback);

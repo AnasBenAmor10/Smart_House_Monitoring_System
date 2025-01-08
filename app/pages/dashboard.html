@@ -7,8 +7,14 @@
     <link href="/styles/main.css" rel="stylesheet">
     <style>
         body{
-            background: url(/images/back1.png) no-repeat center;
+            background: url(/images/back1.png) no-repeat center center fixed;
         }
+        @media (max-width: 428px) {
+            body {
+               background: url("../images/mobile.png") no-repeat center center fixed;
+         }
+
+  }
     </style>
 </head>
 <body>
@@ -16,15 +22,15 @@
     <div class="container-fluid py-4">
         <div class="row">
             <!-- User Profile Section -->
-            <div class="col-md-5">
+            <div class="col-md-5 left-part">
                 <div class="card mb-2 m-2">
                     <div class="profile-header">
-                        <h2 class="welcome-text">Hi Anas!</h2>
+                        <h2 class="welcome-text" id="name"></h2>
                         <p class="welcome-message">Welcome Home! Easily increase comfort and save energy with Gira Smart Home solutions. </p>
                         <div class="d-flex align-items-center">
                             <img src="../images/profile.png" alt="Profile" class="profile-image">
                             <div>
-                                <h5 class="profile-name">Anas Ben Amor</h5>
+                                <h5 class="profile-name" id="profile-name"></h5>
                                 <small class="profile-role">Smart Home Owner</small>
                             </div>
                         </div>

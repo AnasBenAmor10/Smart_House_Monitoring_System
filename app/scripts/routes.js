@@ -1,5 +1,5 @@
 import VanillaRouter from "./router.js";
-import { checkSession } from "./iam.js";
+import { checkSession, handleProfilName } from "./iam.js";
 import { HomePresenter } from "./home.js";
 
 const presenters = new Map(); // To store presenters and avoid re-instantiating them
@@ -12,10 +12,10 @@ const router = new VanillaRouter({
 }).listen().on("route", async e => {
     if (checkSession()) {
         console.log(e.detail.route, e.detail.url);
-
         // Fetch the HTML content for the route
         const mainElem = document.getElementById("mainElem");
         mainElem.innerHTML = await fetch("pages/" + e.detail.route + ".html").then(x => x.text());
+        handleProfilName();
 
         // Change the document title
         document.title = mainElem.getElementsByTagName('title')[0].innerHTML;

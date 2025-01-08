@@ -1,4 +1,4 @@
-const cacheName = "Phoenix-Fleet-Manager-V1";
+const cacheName = "smarthome";
 const assets = [
   "/",
   "/scripts/events.js",
