@@ -219,7 +219,7 @@ Smarthome ensures secure communication with SSL certification. Below is a screen
 ## **🧑‍💻 Project By**
 
 <a href="https://github.com/AnasBenAmor10/Smart_House_Monitoring_System/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=AymenKtari01/Smart_House_Monitoring_System" />
+    <img src="https://contrib.rocks/image?repo=AnasBenAmor10/Smart_House_Monitoring_System" />
 </a>
 
 ---
