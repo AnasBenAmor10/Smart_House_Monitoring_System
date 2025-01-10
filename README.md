@@ -2,7 +2,8 @@
 
 ## ✨ Project Overview
 In today’s interconnected world, the concept of a “smart house” has gained significant traction. This project introduces a comprehensive IoT-based smart house monitoring system powered by a Raspberry Pi. The system is designed to oversee key household elements such as lighting, water usage, and security. It integrates sensors, alarms, and computer vision to create a connected and intelligent home environment.
-
+## Architecture 
+![Dashboard Screenshot](/images/architecture.png)
 ## 🔧 Features
 - **Resource Management:** Monitor household parameters such as lighting and water usage.
 - **Security Enhancements:** Use computer vision and proximity sensors to detect unauthorized activities.
@@ -26,6 +27,20 @@ In today’s interconnected world, the concept of a “smart house” has gained
 ### Middleware
 - **Jakarta EE:** Java-based framework for secure API management.
 - **WildFly:** Java application server for hosting middleware.
+### MLOps Part
+An MLOps pipeline will streamline the ongoing training, deployment, and monitoring of the
+object detection model. Key features include:
+
+- **Automated Training and Deployment**: The MLOps framework will periodically
+train and update the model with relevant data, deploying it to ensure real-time detec-
+tion capabilities on the ESP32-CAM.
+- **Performance Monitoring**: Automated monitoring will track the model’s accuracy
+and detect performance drift, ensuring reliable person detection across different condi-
+tions.
+- **Alerts and Notifications**: Upon detecting a person, the model will trigger alerts and
+predefined actions to enhance home security.
+### Node-Redd-Flow
+![Dashboard Screenshot](/images/node-red_flow.png)
 
 ### Frontend
 - **PWA:** Responsive web app for cross-platform accessibility.
@@ -120,9 +135,29 @@ subsystem=undertow/configuration=handler/file=welcome-content:write-attribute(na
 #### 6. Access the Dashboard
 - Open the PWA in your browser to monitor and control the system.
 
+### 🖥️ Frontend
+#### Welcome Page
+![Welcome Page Screenshot](/images/home.png)
+
+#### Sign In / Sign Up
+![Sign In Screenshot](/images/login.png)  
+![Sign Up Screenshot](/images/signup.png)
+
+#### Dashboard
+![Dashboard Screenshot](/images/dashboard.png)
+
+## 🔒 SSL Certification
+Smarthome ensures secure communication with SSL certification. Below is a screenshot verifying the SSL certification:
 ## ⚙️ Future Enhancements
 - Add voice control for home automation.
 - Implement predictive analytics for resource optimization.
 - Expand the system to include additional IoT devices.
 
 
+## **🧑‍💻 Project By**
+
+<a href="https://github.com/AnasBenAmor10/Smart_House_Monitoring_System/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=AymenKtari01/Smart_House_Monitoring_System" />
+</a>
+
+---
