@@ -137,25 +137,40 @@
                 redirect: 'follow',
                 body: new URLSearchParams(payload),
             };
+
             fetch(`${registerForm.action}`, options)
-                .then((response) => {
+                .then(async (response) => {
                     if (response.ok) {
-                        return response.text(); // Read the response as text
+                        const result = await response.text();
+                        document.open();
+                        document.write(result);
+                        document.close();
                     } else {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
+                        const errorText = await response.text();
+                        console.log(errorText);
+                        const parser = new DOMParser();
+
+                        // Function to decode HTML entities
+                        function decodeHtmlEntities(encodedString) {
+                            const textarea = document.createElement("textarea");
+                            textarea.innerHTML = encodedString;
+                            return textarea.value;
+                        }
+
+                        const decodedHtml = decodeHtmlEntities(errorText);
+                        const doc = parser.parseFromString(decodedHtml, "text/html");
+                        console.log(doc);
+                        const errorMessage = doc.querySelector("p")?.textContent;
+                        console.log(errorMessage);
+
+                        const backendErrorDiv = document.getElementById('backendError');
+                        backendErrorDiv.textContent = errorMessage || "An unexpected error occurred!";
+                        backendErrorDiv.style.display = 'block';
                     }
-                })
-                .then((htmlContent) => {
-                    // Replace the whole body with the new HTML
-                    document.open();
-                    document.write(htmlContent);
-                    document.close();
                 })
                 .catch((err) => {
                     console.info(err + " url: " + `${registerForm.action}`);
                 });
-
-
         }
 
     </script>
@@ -249,23 +264,6 @@
     });
 </script>
 <script>
-    const errorText = await response.text();
-    console.log(errorText);
-    const parser = new DOMParser();
-
-    // Function to decode HTML entities
-    function decodeHtmlEntities(encodedString) {
-        const textarea = document.createElement("textarea");
-        textarea.innerHTML = encodedString;
-        return textarea.value;
-    }
-
-    const decodedHtml = decodeHtmlEntities(errorText);
-    const doc = parser.parseFromString(decodedHtml, "text/html");
-    const errorMessage = doc.querySelector("p")?.textContent;
-    backendErrorDiv= document.getElementById("backendError")
-    backendErrorDiv.textContent = errorMessage;
-    backendErrorDiv.style.display = 'block';
 
     let q = parseQueryString(window.location.search.substring(1));
     let registerForm = document.getElementById('registerForm');

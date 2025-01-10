@@ -37,8 +37,8 @@ public class JwtManager {
     private final long keyPairLifeTime = 10800;
     private final long jwtLifeTime = 1020;
     private final long maxCacheSize = 3;
-    private final Set<String> audiences = Set.of("urn:me.appsec.www","urn:me.appsec.admin","urn:me:appsec:api");
-    private final String issuer = "urn:me.appsec.iam";
+    private final Set<String> audiences = Set.of("urn:me.smarthome.www","urn:me.smarthome.admin","urn:me:smarthome:api");
+    private final String issuer = "urn:me.smarthome.iam";
 
     private void generateKeyPair() {
         var kid = UUID.randomUUID().toString();

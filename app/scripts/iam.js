@@ -173,7 +173,6 @@ export function handlePKCERedirect(){
                 redirect_uri: config.redirect_uri,
                 code_verifier: localStorage.getItem("pkce_code_verifier")
             }, function(request, body) {
-                console.log("Access Token:", body.access_token);
                 sessionStorage.setItem('accessToken', body.access_token);
                 const signInEvent = new CustomEvent("signIn", { detail: body });
                 document.dispatchEvent(signInEvent);

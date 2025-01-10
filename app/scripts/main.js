@@ -1,6 +1,7 @@
 import * as bootstrap from 'bootstrap'
 import {checkSession, registerPKCEClickListener, registration, handlePKCERedirect} from './iam.js';
 import "./routes.js"
+import { toggleDevice } from './websocket.js';
 
 (() => {
     'use strict'
@@ -10,7 +11,8 @@ import "./routes.js"
         const logoutButton = document.getElementById("signout");
         const profile=document.getElementById("profile")
         if (logoutButton) {
-            if (checkSession()) {
+            if (
+            checkSession()) {
                 profile.classList.remove("d-none");
                 
                 // Add event listener for the logout button
@@ -68,7 +70,7 @@ import "./routes.js"
 
     // Setup logout button
     setupLogoutButton();
-
+    
     // Service Worker registration
     window.onload = () => {
         if ('serviceWorker' in navigator) {

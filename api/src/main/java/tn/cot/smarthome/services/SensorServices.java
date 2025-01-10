@@ -1,10 +1,12 @@
 package tn.cot.smarthome.services;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import tn.cot.smarthome.entities.Identity;
 import tn.cot.smarthome.entities.Sensor;
 import jakarta.inject.Inject;
 import tn.cot.smarthome.repositories.SensorRepository;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,4 +49,13 @@ public class SensorServices {
         }
         return false;
     }
+    private SensorRepository sensorRepository;
+
+    public Sensor getMostRecentSensorByType(String type) {
+        return sensorDataRepository.findByType(type)
+                .max(Comparator.comparing(Sensor::getMeasurementTime))
+                .orElse(null);
+    }
+
+
 }

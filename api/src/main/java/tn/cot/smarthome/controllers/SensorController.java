@@ -71,4 +71,15 @@ public class SensorController {
         }
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+    @GET
+    @Path("/most-recent/{type}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getMostRecentSensorByType(@PathParam("type") String type) {
+        Sensor mostRecentSensor = sensorDataServices.getMostRecentSensorByType(type);
+        if (mostRecentSensor == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("No data found for type: " + type).build();
+        }
+        return Response.ok(mostRecentSensor).build();
+    }
+
 }

@@ -1,5 +1,43 @@
 import { Model, View, Presenter } from './mvp.js';
 import { StateChangeEvent } from './events.js';
+import { toggleDevice } from './websocket.js';
+
+
+const setupDeviceSwitch = (deviceId, deviceName) => {
+  const deviceSwitch = document.getElementById(deviceId);
+  if (deviceSwitch) {
+    deviceSwitch.addEventListener('click', () => toggleDevice(deviceSwitch, deviceName));
+  } else {
+    console.log(`Switch for ${deviceName} is NULL`);
+  }
+};
+
+const waitForDeviceSwitch = (deviceId, deviceName) => {
+  const interval = setInterval(() => {
+    const deviceSwitch = document.getElementById(deviceId);
+    if (deviceSwitch) {
+      setupDeviceSwitch(deviceId, deviceName); // Appelé après que l'élément est trouvé
+      clearInterval(interval); // Stopper l'intervalle une fois l'élément trouvé
+    }
+  }, 100); // Vérification toutes les 100ms
+};
+
+// Assurez-vous que le DOM est chargé avant d'exécuter quoi que ce soit
+document.addEventListener('DOMContentLoaded', () => {
+  const devices = [
+    { id: 'light', name: 'bedroomLight' },
+    { id: 'airConditioner', name: 'AirConditioner' },
+    { id: 'ev', name: 'EV' },
+    { id: 'garageDoor', name: 'GarageDoor' },
+  ];
+
+  devices.forEach(device => {
+    waitForDeviceSwitch(device.id, device.name);
+  });
+});
+
+
+
 
 class HomeModel extends Model {
   constructor() {
@@ -26,6 +64,203 @@ class HomeModel extends Model {
   loadModel() {
     this.fetchWeather();
   }
+
+
+  async fetchMostRecentTemperature() {
+    const url = `https://api.smarthomecot.lme:8443/rest-api/sensors/most-recent/temperature`;
+    let accessToken = sessionStorage.getItem('accessToken');
+    const token = accessToken ;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      this.fireStateChangeEvent(data, StateChangeEvent.LOADED);
+    } catch (error) {
+      console.error("Error fetching temperature data:", error);
+    }
+  }
+  
+  
+  loadTemperatureData() {
+    this.fetchMostRecentTemperature();
+  }
+
+
+
+  async fetchOverallWaterConsumption() {
+    const url = `https://api.smarthomecot.lme:8443/rest-api/sensors/most-recent/overallwaterconsumption`;
+    let accessToken = sessionStorage.getItem('accessToken');
+    const token = accessToken;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      // Extract the water consumption value from the response
+      const waterConsumptionValue = Math.round(data.value);
+
+      // Update the DOM element with the water consumption value
+      const waterConsumptionDisplay = document.getElementById('water');
+      if (waterConsumptionDisplay) {
+        waterConsumptionDisplay.innerHTML = `${waterConsumptionValue} L`;
+      } else {
+        console.error("Element with id 'water' not found in the DOM.");
+      }
+        this.fireStateChangeEvent(data, StateChangeEvent.LOADED);
+      } catch (error) {
+        console.error("Error fetching water consumption data:", error);
+      }
+  }
+  
+  loadWaterConsumptionData() {
+    this.fetchOverallWaterConsumption();
+  }
+
+
+
+
+
+  // air quality fetch value
+  async fetchOverallairquality() {
+    const url = `https://api.smarthomecot.lme:8443/rest-api/sensors/most-recent/airquality`;
+    let accessToken = sessionStorage.getItem('accessToken');
+    const token = accessToken;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      // Extract the water consumption value from the response
+      const airqualityvalue = Math.round(data.value);
+
+      // Update the DOM element with the water consumption value
+      const airqualityDisplay = document.getElementById('Air_Quality');
+      if (airqualityDisplay) {
+        airqualityDisplay.innerHTML = `${airqualityvalue}`;
+      } else {
+        console.error("Element with id 'water' not found in the DOM.");
+      }
+        this.fireStateChangeEvent(data, StateChangeEvent.LOADED);
+      } catch (error) {
+        console.error("Error fetching water consumption data:", error);
+      }
+  }
+  
+  loadairquality() {
+    this.fetchOverallairquality();
+  }
+
+
+
+  // humidity
+  async fetchOverallhumidity() {
+    const url = `https://api.smarthomecot.lme:8443/rest-api/sensors/most-recent/humidity`;
+    let accessToken = sessionStorage.getItem('accessToken');
+    const token = accessToken;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      // Extract the water consumption value from the response
+      const humidityvalue = Math.round(data.value);
+
+      // Update the DOM element with the water consumption value
+      const humidityDisplay = document.getElementById('humidity');
+      if (humidityDisplay) {
+        humidityDisplay.innerHTML = `${humidityvalue}`;
+      } else {
+        console.error("Element with id 'water' not found in the DOM.");
+      }
+        this.fireStateChangeEvent(data, StateChangeEvent.LOADED);
+      } catch (error) {
+        console.error("Error fetching water consumption data:", error);
+      }
+  }
+  
+  loadhumidity() {
+    this.fetchOverallhumidity();
+  }
+  
+
+
+  // kitchen water
+  async fetchkitchenwater() {
+    const url = `https://api.smarthomecot.lme:8443/rest-api/sensors/most-recent/kitchenwaterconsumption`;
+    let accessToken = sessionStorage.getItem('accessToken');
+    const token = accessToken;
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      // Extract the water consumption value from the response
+      const kitchenvalue = Math.round(data.value);
+
+      // Update the DOM element with the water consumption value
+      const kitchenDisplay = document.getElementById('kitchenwater');
+      if (kitchenDisplay) {
+        kitchenDisplay.innerHTML = `${kitchenvalue}`;
+      } else {
+        console.error("Element with id 'kitchen' not found in the DOM.");
+      }
+        this.fireStateChangeEvent(data, StateChangeEvent.LOADED);
+      } catch (error) {
+        console.error("Error fetching kitchen consumption data:", error);
+      }
+  }
+  
+  loadkitchen() {
+    this.fetchkitchenwater();
+  }
+  
+  
 }
 
 class HomeView extends View {
@@ -93,6 +328,49 @@ class HomeView extends View {
       console.error('Error applying bindings:', e);
     }
   }
+  updateTemperatureDisplay(sensorData) {
+    const temperatureValue = Math.round(sensorData.value);
+    const temperatureDisplay = document.getElementById('temperature');
+    const temperatureStatus = document.getElementById('temperature_status');
+    // Update the temperature value
+    temperatureDisplay.innerHTML = `${temperatureValue}°C`;
+  
+    // Determine the status based on temperature value
+    let status = '';
+    if (temperatureValue <= 10) {
+      status = 'Cold';
+    } else if (temperatureValue <= 25) {
+      status = 'Mild';
+    } else {
+      status = 'Hot';
+    }
+  
+    // Update the status display
+    temperatureStatus.textContent = status;
+    }
+
+
+
+
+    updateWaterConsumptionDisplay(sensorData) {
+      const waterConsumptionValue = Math.round(sensorData.value);
+      const waterConsumptionDisplay = document.getElementById('water');
+    
+      // Update the water consumption value
+      waterConsumptionDisplay.innerHTML = `${waterConsumptionValue} L`;
+    
+      // Determine the status based on consumption value
+      let status = '';
+      if (waterConsumptionValue <= 50) {
+        status = 'Low';
+      } else if (waterConsumptionValue <= 200) {
+        status = 'Moderate';
+      } else {
+        status = 'High';
+      }
+    }
+    
+  
 
 }
 
@@ -103,13 +381,26 @@ export class HomePresenter extends Presenter {
     super(view, model);
 
     // Register to listen for state change events
-    this.model.register((weatherData) => {
+    this.model.register((data) => {
       if (this.model.mvpEvent.isStateChange() && this.model.mvpEvent.event === StateChangeEvent.LOADED) {
-        this.view.init(weatherData);
+        if (data.type === 'temperature') {
+          this.view.updateTemperatureDisplay(data);
+        } 
+        if (data.type === 'overallWaterConsumption') {
+          this.view.updateWaterConsumptionDisplay(data);
+        } else {
+          this.view.init(data);
+        }
       }
     });
 
-    // Load weather data
-    this.model.loadModel();
+    // Load weather, temperature, and water consumption data
+    this.model.loadModel(); // Load weather data
+    this.model.loadTemperatureData(); // Load temperature data
+    this.model.loadWaterConsumptionData(); // Load water consumption data
+    this.model.loadairquality();
+    this.model.loadhumidity();
+    this.model.loadkitchen();
   }
+  
 }

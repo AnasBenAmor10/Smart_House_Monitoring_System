@@ -1,6 +1,7 @@
 import VanillaRouter from "./router.js";
 import { checkSession, handleProfilName } from "./iam.js";
 import { HomePresenter } from "./home.js";
+import {connectClient, toggleDevice} from "./websocket.js";
 
 const presenters = new Map(); // To store presenters and avoid re-instantiating them
 
@@ -11,6 +12,7 @@ const router = new VanillaRouter({
     }
 }).listen().on("route", async e => {
     if (checkSession()) {
+        connectClient()
         console.log(e.detail.route, e.detail.url);
         // Fetch the HTML content for the route
         const mainElem = document.getElementById("mainElem");
@@ -40,6 +42,8 @@ const router = new VanillaRouter({
             presenter.load(); 
             presenters.set(e.detail.route, presenter); 
         }
+
+
     } else {
         
     }
