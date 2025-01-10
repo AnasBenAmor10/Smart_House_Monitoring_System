@@ -1,0 +1,1033 @@
+[
+    {
+        "id": "dd802be61f508192",
+        "type": "tab",
+        "label": "SmarthomeAutomation",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "f4014838d3c347de",
+        "type": "serial in",
+        "z": "dd802be61f508192",
+        "name": "Receive Serial Data ",
+        "serial": "5fcf3b59ecc5ed2b",
+        "x": 110,
+        "y": 340,
+        "wires": [
+            [
+                "62c87d4282e204ec"
+            ]
+        ]
+    },
+    {
+        "id": "62c87d4282e204ec",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Parse Data ",
+        "func": "const data = msg.payload.trim();\nconst sensors = data.split(',');\n\nlet output = {};\nsensors.forEach(sensor => {\n    const [key, value] = sensor.split(':');\n    output[key] = value;\n});\n\nreturn { payload: output };\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 290,
+        "y": 340,
+        "wires": [
+            [
+                "69b31c4f9dee01eb"
+            ]
+        ]
+    },
+    {
+        "id": "7563263e4c014db7",
+        "type": "switch",
+        "z": "dd802be61f508192",
+        "name": "Route Messages",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "hask",
+                "v": "Temperature",
+                "vt": "str"
+            },
+            {
+                "t": "hask",
+                "v": "Humidity",
+                "vt": "str"
+            },
+            {
+                "t": "hask",
+                "v": "AirQuality",
+                "vt": "str"
+            },
+            {
+                "t": "hask",
+                "v": "OverallWaterConsumption",
+                "vt": "str"
+            },
+            {
+                "t": "hask",
+                "v": "GardenWaterSensor",
+                "vt": "str"
+            },
+            {
+                "t": "hask",
+                "v": "KitchenWaterSensor",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 6,
+        "x": 610,
+        "y": 340,
+        "wires": [
+            [
+                "2d4da1670621435d"
+            ],
+            [
+                "cb0e7d7dfcbf2665"
+            ],
+            [
+                "8228a767dbf7dd76"
+            ],
+            [
+                "f064099f1e45bd95"
+            ],
+            [
+                "6d9ae331bbb3a267"
+            ],
+            [
+                "7423d72cbe9e353d"
+            ]
+        ]
+    },
+    {
+        "id": "e31000d9f5eed511",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/temperature",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1160,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "8228a767dbf7dd76",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetAirQuality",
+        "func": "msg.payload = msg.payload.AirQuality;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 280,
+        "wires": [
+            [
+                "ab787be476297097"
+            ]
+        ]
+    },
+    {
+        "id": "ab787be476297097",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/airquality",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1150,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "f064099f1e45bd95",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetWaterConsumption",
+        "func": "msg.payload = msg.payload.OverallWaterConsumption;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 340,
+        "wires": [
+            [
+                "d8f2f856b840cab2",
+                "88cf279687609470"
+            ]
+        ]
+    },
+    {
+        "id": "d8f2f856b840cab2",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/overallwaterconsumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1200,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "6d9ae331bbb3a267",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetWaterConsumption",
+        "func": "msg.payload = msg.payload.GardenWaterSensor;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 420,
+        "wires": [
+            [
+                "596495019018a8dc",
+                "e7f8b3fb512eec3b"
+            ]
+        ]
+    },
+    {
+        "id": "596495019018a8dc",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/gardenwatersensor",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1180,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7423d72cbe9e353d",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetWaterConsumption",
+        "func": "msg.payload = msg.payload.KitchenWaterSensor;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 880,
+        "y": 480,
+        "wires": [
+            [
+                "c9cd8d8d8208976f",
+                "5f9d6eadb95e2ac8"
+            ]
+        ]
+    },
+    {
+        "id": "c9cd8d8d8208976f",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/kitchenwatersensor",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1180,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "cb0e7d7dfcbf2665",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetHumidity",
+        "func": "msg.payload = msg.payload.Humidity;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 850,
+        "y": 220,
+        "wires": [
+            [
+                "887f6f638a0c5421"
+            ]
+        ]
+    },
+    {
+        "id": "887f6f638a0c5421",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/humidity",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1140,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "ac71daa6bb8bf746",
+        "type": "mqtt in",
+        "z": "dd802be61f508192",
+        "name": "receiveCommands",
+        "topic": "/smarthome/devices/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "de09474a4b1c2182",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 130,
+        "y": 660,
+        "wires": [
+            [
+                "81abac027965e057"
+            ]
+        ]
+    },
+    {
+        "id": "81abac027965e057",
+        "type": "switch",
+        "z": "dd802be61f508192",
+        "name": "Route Commands",
+        "property": "topic",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "/smarthome/devices/LivingroomLight",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "/smarthome/devices/AirConditioner",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "/smarthome/devices/EV",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "/smarthome/devices/GarageDoor",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "/smarthome/devices/alarm",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 5,
+        "x": 370,
+        "y": 660,
+        "wires": [
+            [
+                "5aae5df770720dd7"
+            ],
+            [
+                "285b32fd362e4b1b"
+            ],
+            [
+                "94e108f879ecbf54"
+            ],
+            [
+                "c8b1c95f2bc3fbd2"
+            ],
+            [
+                "196ff616e81d2ff2"
+            ]
+        ]
+    },
+    {
+        "id": "072821795a6c2831",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check LivingRoom Lamp status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 910,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "4eb3a6ba9ba4af9e",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check AirConditioner status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 900,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "bfaa303227a0d827",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check EV status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "5aae5df770720dd7",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "LivingRoom Lamp Status",
+        "func": "if (msg.payload === \"ON\") {\n    msg.payload = \"LIGHT\\n\";\n} else if (msg.payload === \"OFF\") {\n    msg.payload = \"LIGHT\\n\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 620,
+        "wires": [
+            [
+                "072821795a6c2831",
+                "e29a719074ce94f3"
+            ]
+        ]
+    },
+    {
+        "id": "285b32fd362e4b1b",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "AirConditioner Status",
+        "func": "// Example for lamp command\nif (msg.payload === \"ON\") {\n    msg.payload = \"AC\\n\"; // Command string for Arduino\n} else if (msg.payload === \"OFF\") {\n    msg.payload = \"AC\\n\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 660,
+        "wires": [
+            [
+                "4eb3a6ba9ba4af9e",
+                "e29a719074ce94f3"
+            ]
+        ]
+    },
+    {
+        "id": "94e108f879ecbf54",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Command Electrovanne ",
+        "func": "// Example for lamp command\nif (msg.payload === \"ON\") {\n    msg.payload = \"EV\\n\"; // Command string for Arduino\n} else if (msg.payload === \"OFF\") {\n    msg.payload = \"EV\\n\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 700,
+        "wires": [
+            [
+                "bfaa303227a0d827",
+                "e29a719074ce94f3"
+            ]
+        ]
+    },
+    {
+        "id": "e29a719074ce94f3",
+        "type": "serial out",
+        "z": "dd802be61f508192",
+        "name": "SendCommands",
+        "serial": "5fcf3b59ecc5ed2b",
+        "x": 870,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "77bae1e18aca2b53",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check Serial Data ",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "69b31c4f9dee01eb",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "split",
+        "func": "// Get the payload object\nlet data = msg.payload;\n\n// Loop through the object and send each key-value pair as a separate message\nlet outputs = [];\nfor (let key in data) {\n    if (data.hasOwnProperty(key)) {\n        // Create a new message for each key-value pair\n        let newMsg = { payload: { [key]: data[key] } }; // Directly return the object\n        outputs.push(newMsg);\n    }\n}\n\n// Return individual messages as separate outputs\nreturn [outputs];\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 340,
+        "wires": [
+            [
+                "7563263e4c014db7"
+            ]
+        ]
+    },
+    {
+        "id": "2d4da1670621435d",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "GetTemperature",
+        "func": "msg.payload = msg.payload.Temperature;\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 860,
+        "y": 160,
+        "wires": [
+            [
+                "e31000d9f5eed511"
+            ]
+        ]
+    },
+    {
+        "id": "3e1b5621a0a72ffd",
+        "type": "e-mail",
+        "z": "dd802be61f508192",
+        "server": "smtp.gmail.com",
+        "port": "465",
+        "authtype": "BASIC",
+        "saslformat": true,
+        "token": "oauth2Response.access_token",
+        "secure": true,
+        "tls": true,
+        "name": "aymen.ktari@supcom.tn, anas.benamor@supcom.tn",
+        "dname": "Warning on Email",
+        "x": 1450,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "88cf279687609470",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Verif Threshold",
+        "func": "var sensorValue = msg.payload;\nvar Threshold = 400;\n\n// Check if the email has been sent before (using flow context)\nif (sensorValue > Threshold && !flow.get('emailSent1')) {\n    // Set the message payload\n    msg.payload = \"Warning: water consumption has exceeded \" + Threshold + \" liters. Total consumption is: \" + sensorValue + \"L\"; \n    \n    // Mark that the email has been sent\n    flow.set('emailSent1', true);\n\n    // Return the message to send the email\n    return msg;\n}\n\n// If the threshold is not exceeded or email already sent, return null (no action)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 380,
+        "wires": [
+            [
+                "3e1b5621a0a72ffd",
+                "b3e15af482b64989"
+            ]
+        ]
+    },
+    {
+        "id": "e7f8b3fb512eec3b",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Verif Threshold",
+        "func": "var sensorValue = msg.payload;\nvar Threshold = 400;\n\n// Check if the email has been sent before (using flow context)\nif (sensorValue > Threshold && !flow.get('emailSent2')) {\n    // Set the message payload\n    msg.payload = \"Warning: water consumption has exceeded \" + Threshold + \" liters today. Total consumption is: \" + sensorValue + \"L\"; \n    \n    // Mark that the email has been sent\n    flow.set('emailSent2', true);\n\n    // Return the message to send the email\n    return msg;\n}\n\n// If the threshold is not exceeded or email already sent, return null (no action)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 460,
+        "wires": [
+            [
+                "3e1b5621a0a72ffd",
+                "2093a77b357c3b2b"
+            ]
+        ]
+    },
+    {
+        "id": "5f9d6eadb95e2ac8",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Verif Threshold",
+        "func": "var sensorValue = msg.payload;\nvar Threshold = 400;\n\n// Check if the email has been sent before (using flow context)\nif (sensorValue > Threshold && !flow.get('emailSent3')) {\n    // Set the message payload\n    msg.payload = \"Warning: water consumption has exceeded \" + Threshold + \" liters today. Total consumption is: \" + sensorValue + \"L\"; \n    \n    // Mark that the email has been sent\n    flow.set('emailSent3', true);\n\n    // Return the message to send the email\n    return msg;\n}\n\n// If the threshold is not exceeded or email already sent, return null (no action)\nreturn null;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1260,
+        "y": 540,
+        "wires": [
+            [
+                "3e1b5621a0a72ffd",
+                "3feed1b056098447"
+            ]
+        ]
+    },
+    {
+        "id": "1dd8bb8e4dfadd8b",
+        "type": "mqtt in",
+        "z": "dd802be61f508192",
+        "name": "Alert",
+        "topic": "/smarthome/camera",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "588739feddcb2893",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 70,
+        "y": 860,
+        "wires": [
+            [
+                "88d1813d74b91433"
+            ]
+        ]
+    },
+    {
+        "id": "88d1813d74b91433",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "function 1",
+        "func": "msg.payload =\"triggerAlarm\" \n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 860,
+        "wires": [
+            [
+                "5acdb5c80a9ecbca",
+                "eb10f2f2f8d52346",
+                "fbc955656b3b552d"
+            ]
+        ]
+    },
+    {
+        "id": "ef06061e03647a15",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/alerts/overallwaterconsumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1690,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "8e4193e5aef7bcdc",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/alerts/kitchenwaterconsumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1690,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "a9a67b3327d03501",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/alerts/gardenwaterconsumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 1690,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "b3e15af482b64989",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "function 2",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1440,
+        "y": 380,
+        "wires": [
+            [
+                "ef06061e03647a15"
+            ]
+        ]
+    },
+    {
+        "id": "2093a77b357c3b2b",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "function 3",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1440,
+        "y": 460,
+        "wires": [
+            [
+                "a9a67b3327d03501"
+            ]
+        ]
+    },
+    {
+        "id": "3feed1b056098447",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "function 4",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1440,
+        "y": 540,
+        "wires": [
+            [
+                "8e4193e5aef7bcdc"
+            ]
+        ]
+    },
+    {
+        "id": "5acdb5c80a9ecbca",
+        "type": "serial out",
+        "z": "dd802be61f508192",
+        "name": "SendAlert",
+        "serial": "5fcf3b59ecc5ed2b",
+        "x": 400,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "c8b1c95f2bc3fbd2",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Command GarageDoor",
+        "func": "// Example for lamp command\nif (msg.payload === \"ON\") {\n    msg.payload = \"GO\\n\"; // Command string for Arduino\n} else if (msg.payload === \"OFF\") {\n    msg.payload = \"GC\\n\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 740,
+        "wires": [
+            [
+                "7819d1590e300061",
+                "e29a719074ce94f3"
+            ]
+        ]
+    },
+    {
+        "id": "7819d1590e300061",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check Garage status",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 880,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "fbc955656b3b552d",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 220,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "196ff616e81d2ff2",
+        "type": "function",
+        "z": "dd802be61f508192",
+        "name": "Command AlarmSystem",
+        "func": "// Example for lamp command\nif (msg.payload === \"ON\") {\n    msg.payload = \"ALARM_ON\\n\"; // Command string for Arduino\n} else if (msg.payload === \"OFF\") {\n    msg.payload = \"ALARM_OFF\\n\";\n}\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 780,
+        "wires": [
+            [
+                "e29a719074ce94f3",
+                "9addb1aa0d8bafac"
+            ]
+        ]
+    },
+    {
+        "id": "9addb1aa0d8bafac",
+        "type": "debug",
+        "z": "dd802be61f508192",
+        "name": "Check Alarm status",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 870,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "eb10f2f2f8d52346",
+        "type": "mqtt out",
+        "z": "dd802be61f508192",
+        "name": "",
+        "topic": "/smarthome/sensors/alarm",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "de09474a4b1c2182",
+        "x": 460,
+        "y": 840,
+        "wires": []
+    },
+    {
+        "id": "5fcf3b59ecc5ed2b",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "9600",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
+        "id": "de09474a4b1c2182",
+        "type": "mqtt-broker",
+        "name": "HiveMQ-CloudCluster",
+        "broker": "3f8df013054946d4ab9fb4775293070e.s1.eu.hivemq.cloud",
+        "port": "8883",
+        "tls": "c0fa8b325d288c21",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": true,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "588739feddcb2893",
+        "type": "mqtt-broker",
+        "name": "Local mqtt Server",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "c0fa8b325d288c21",
+        "type": "tls-config",
+        "name": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "servername": "",
+        "verifyservercert": true,
+        "alpnprotocol": ""
+    }
+]
