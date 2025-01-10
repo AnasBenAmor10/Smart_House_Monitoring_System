@@ -1,12 +1,17 @@
 import { Model, View, Presenter } from './mvp.js';
 import { StateChangeEvent } from './events.js';
-import { toggleDevice } from './websocket.js';
+import { toggleDevice ,sendMessage} from './websocket.js';
+
+
+
+
 
 
 const setupDeviceSwitch = (deviceId, deviceName) => {
   const deviceSwitch = document.getElementById(deviceId);
   if (deviceSwitch) {
     deviceSwitch.addEventListener('click', () => toggleDevice(deviceSwitch, deviceName));
+
   } else {
     console.log(`Switch for ${deviceName} is NULL`);
   }
@@ -25,10 +30,11 @@ const waitForDeviceSwitch = (deviceId, deviceName) => {
 // Assurez-vous que le DOM est chargé avant d'exécuter quoi que ce soit
 document.addEventListener('DOMContentLoaded', () => {
   const devices = [
-    { id: 'light', name: 'bedroomLight' },
+    { id: 'light', name: 'LivingroomLight' },
     { id: 'airConditioner', name: 'AirConditioner' },
     { id: 'ev', name: 'EV' },
     { id: 'garageDoor', name: 'GarageDoor' },
+    {id: 'alarm' , name: 'alarm'},
   ];
 
   devices.forEach(device => {
@@ -220,6 +226,8 @@ class HomeModel extends Model {
   }
   
 
+  
+
 
   // kitchen water
   async fetchkitchenwater() {
@@ -246,7 +254,7 @@ class HomeModel extends Model {
       // Update the DOM element with the water consumption value
       const kitchenDisplay = document.getElementById('kitchenwater');
       if (kitchenDisplay) {
-        kitchenDisplay.innerHTML = `${kitchenvalue}`;
+        kitchenDisplay.innerHTML = `${kitchenvalue} L`;
       } else {
         console.error("Element with id 'kitchen' not found in the DOM.");
       }
