@@ -146,6 +146,9 @@ subsystem=undertow/configuration=handler/file=welcome-content:write-attribute(na
 #### Dashboard
 ![Dashboard Screenshot](/images/dashboard.png)
 
+#### Dashboard
+![Dashboard Screenshot](/images/pipeline.jpg)
+
 ## 🔒 SSL Certification
 Smarthome ensures secure communication with SSL certification. Below is a screenshot verifying the SSL certification:
 ## ⚙️ Future Enhancements
