@@ -49,7 +49,19 @@ In today’s interconnected world, the concept of a “smart house” has gained
 
 ```bash
 /subsystem=undertow/server=default-server/host=api-host:add(alias=["api.yourdomain.me"],default-web-module="api-1.0.war")
+/subsystem=undertow/server=default-server/host=api-host/setting=access-log:add
+/subsystem=undertow/server=default-server/host=api-host/setting=access-log:write-attribute(name=pattern,value="combined")
+/subsystem=undertow/server=default-server/host=api-host/setting=access-log:write-attribute(name=prefix,value="api-yourapp")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref=hsts:add(predicate="equals(%p,8443)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref=http-to-https:add(predicate="equals(%p,8080)")
+```
+```bash
 /subsystem=undertow/server=default-server/host=iam-host:add(alias=["iam.yourdomain.me"],default-web-module="iam-1.0.war")
+/subsystem=undertow/server=default-server/host=iam-host/setting=access-log:add
+/subsystem=undertow/server=default-server/host=iam-host/setting=access-log:write-attribute(name=pattern,value="combined")
+/subsystem=undertow/server=default-server/host=iam-host/setting=access-log:write-attribute(name=prefix,value="iam-yourapp")
+/subsystem=undertow/server=default-server/host=iam-host/filter-ref=hsts:add(predicate="equals(%p,8443)")
+/subsystem=undertow/server=default-server/host=iam-host/filter-ref=http-to-https:add(predicate="equals(%p,8080)")
 ```
 
 #### 2. Configure Virtual Hosts in `jboss-web.xml`
@@ -70,7 +82,30 @@ Example for `iam-1.0.war`:
 Add the following headers:
 ```bash
 /subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Origin":add(header-name="Access-Control-Allow-Origin",header-value="*")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Methods":add(header-name="Access-Control-Allow-Methods",header-value="GET, POST, OPTIONS, HEAD, PUT, PATCH, DELETE")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Headers":add(header-name="Access-Control-Allow-Headers",header-value="accept, authorization, content-type, x-requested-with")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Expose-Headers":add(header-name="Access-Control-Expose-Headers",header-value="strict-transport-security, content-security-policy, content-type, content-encoding, date, location, last-modified, etag")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Allow-Credentials":add(header-name="Access-Control-Allow-Credentials",header-value="true")
+/subsystem=undertow/configuration=filter/response-header="Access-Control-Max-Age":add(header-name="Access-Control-Max-Age",header-value="1")
 ```
+#### 4. Add CORS Filters to Virtual Hosts
+Include CORS filters for each host:
+
+#### API Host
+```bash
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Allow-Origin":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Allow-Methods":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Allow-Headers":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Expose-Headers":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Allow-Credentials":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+/subsystem=undertow/server=default-server/host=api-host/filter-ref="Access-Control-Max-Age":add(predicate="regex(pattern='^(https:\/\/(?:.+\.)?yourdomain.me(?::\d{1,5})?)(\/.*\/?)?$',value=%{i,Origin},full-match=true)")
+```
+
+#### IAM Host
+Repeat the above commands, replacing api-host with iam-host.
+
+---
+
 
 #### 4. Set Frontend Path
 Point the virtual host to your frontend:
