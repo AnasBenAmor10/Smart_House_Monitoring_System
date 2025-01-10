@@ -2,7 +2,7 @@
 
 ## ✨ Project Overview
 In today’s interconnected world, the concept of a “smart house” has gained significant traction. This project introduces a comprehensive IoT-based smart house monitoring system powered by a Raspberry Pi. The system is designed to oversee key household elements such as lighting, water usage, and security. It integrates sensors, alarms, and computer vision to create a connected and intelligent home environment.
-## Architecture 
+## 🏗️ Architecture 
 ![Dashboard Screenshot](/images/architecture.png)
 ## 🔧 Features
 - **Resource Management:** Monitor household parameters such as lighting and water usage.
@@ -17,6 +17,13 @@ In today’s interconnected world, the concept of a “smart house” has gained
 - **Gas Sensor:** Detects hazardous fumes.
 - **Proximity Sensors:** Detect movement around entry points.
 - **Water Flow Sensors:** Monitor water usage in various areas.
+- **Electrovalve**: Controls water flow and can shut off supply during emergencies.
+- **Servo Motor**: Used to automate the opening and closing of doors (garage and house doors).
+- **Garage Door System**: Automated using servo motors, controlled remotely via the PWA.
+- **House Door Lock**: Automated with servo motors for secure locking/unlocking.
+- **Motion-Activated Light**: Lights turn on automatically when a person is detected.
+- **Command-Activated Light**: Lights can also be controlled via commands from the PWA.
+- **Alarm System:** Alerts the user in case of unauthorized activity or critical events
 
 ## 🚀 Technologies
 ### Backend
@@ -128,6 +135,49 @@ Point the virtual host to your frontend:
 subsystem=undertow/configuration=handler/file=welcome-content:write-attribute(name=path,value="<PATH_TO_WWW>/yourfront")
 ```
 
+#### 5. Configure MongoDB and MQTT
+Place the following configuration in `META-INF/resources`:
+
+```properties
+# MongoDB database
+jnosql.document.database=CoT_Project
+jnosql.mongodb.host=localhost:27017
+jnosql.document.provider=org.eclipse.jnosql.databases.mongodb.communication.MongoDBDocumentConfiguration
+
+# Key Pair Configuration
+key.pair.lifetime.duration=10800
+key.pair.cache.size=3
+
+# JWT Configuration
+jwt.lifetime.duration=1020
+jwt.issuer=urn:smarthomecot:iam
+jwt.audiences=urn:smarthomecot.lme:api,urn:smarthomecot.lme:erp
+jwt.claim.roles=groups
+mp.jwt.realm=urn:smarthomecot.lme:iam
+
+# Argon2 Configuration
+argon2.saltLength=32
+argon2.hashLength=128
+argon2.iterations=23
+argon2.memory=97579
+argon2.threads=2
+
+# MQTT Configuration
+mqtt.uri=ssl://3f8df....................eu.hivemq.cloud:8883
+mqtt.username=***********
+mqtt.password=**********
+
+# Email Service Configuration
+smtp.host=smtp.gmail.com
+smtp.port=587
+smtp.username=***********
+smtp.password=**********
+smtp.starttls.enable=true
+
+# Roles
+roles=Client,Admin
+```
+
 #### 5. Launch the Application
 - Deploy the artifacts (`api-1.0.war` and `iam-1.0.war`) to WildFly.
 - Start the Raspberry Pi system to manage IoT devices.
@@ -146,11 +196,20 @@ subsystem=undertow/configuration=handler/file=welcome-content:write-attribute(na
 #### Dashboard
 ![Dashboard Screenshot](/images/dashboard.png)
 
-#### Dashboard
+#### 🧩 Prototype
+##### Features
+- 🚀 **Real-time Monitoring**: Track and manage your home in real-time.
+- 📷 **Computer Vision**: Secure your home using ESP32CAM and YOLO for AI-based detection.
+- 💧 **Water Management**: Monitor water usage efficiently with flow sensors.
+- 🌡️ **Environmental Sensors**: DHT22 provides insights on temperature and humidity.
+- 🔒 **Security Alerts**: Proximity sensors detect unauthorized activities.
+
 ![Dashboard Screenshot](/images/pipeline.jpg)
+![Dashboard Screenshot](/images/pipeline2.jpg)
 
 ## 🔒 SSL Certification
 Smarthome ensures secure communication with SSL certification. Below is a screenshot verifying the SSL certification:
+![Dashboard Screenshot](/images/SSL.png)
 ## ⚙️ Future Enhancements
 - Add voice control for home automation.
 - Implement predictive analytics for resource optimization.
@@ -164,3 +223,13 @@ Smarthome ensures secure communication with SSL certification. Below is a screen
 </a>
 
 ---
+
+
+
+
+
+
+
+
+
+
